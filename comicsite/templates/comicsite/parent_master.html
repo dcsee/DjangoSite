@@ -1,0 +1,68 @@
+{% load static %}
+{% autoescape off %}
+<html>
+<head>
+<link rel="stylesheet" href="/static/css/singleImagePost.css"/>
+<script type="text/javascript">
+function mySearchEvent(){
+    var uri = document.getElementById("search_uri").href;
+    var searchTerms = document.getElementById("search_query").value;
+    var el = document.getElementById("main_content_update_handle");
+    var searchUri = uri + searchTerms;
+    el.innerHTML = searchUri;
+    updatePageElement(el, searchUri);
+}
+
+function myOnclickEvent(callingEl){
+    var el = document.getElementById("main_content_update_handle");
+    updatePageElement(el, callingEl.href);
+}
+
+function updatePageElement(el, myUri){
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            el.innerHTML = req.responseText;
+        }
+    };
+    req.open("GET", myUri, true);
+    req.send();
+}
+</script>
+</head>
+<body>
+<table id="main_page">
+    {% block banner %}
+    <tr border="1"><td class="banner">
+        <a href="{% url 'newest_post' %}"><img src="{% static 'img/assets/banner_with_logo.png' %}" title="the banner image!"/></a>
+    </td></tr>
+    {% endblock %}
+   
+    {% block menu %} 
+    <tr><td><!--menu_bar-->
+        <table class="menu_bar_elements">
+            <tr><td class="menu_bar_element">    
+                    <a id="linky" onclick="myOnclickEvent(this); return false;" href="{% url 'xml_all_posts' %}">See All Posts</a></td>
+                <td class="menu_bar_element" style="border: 2px solid #f96854;">
+                    <a href="https://www.patreon.com/raaky">Check out my <b>Patreon!</b></a></td>
+                <td class="menu_bar_element">
+                    <a onclick="myOnclickEvent(this); return false;" href="{% url 'xml_post_by_id' post_id=13 %}">About</a></td>
+                <td class="search_bar" style="background-color:#a2cff6">
+                    <form action="javascript:;" onsubmit="mySearchEvent()">
+                    <input type="text" id="search_query" style="width:90%;" placeholder="Search here!"></input>
+                    <a href="{% url 'xml_search' search_text=''%}" id="search_uri" style="visibility:hidden;"></a>
+                    <button type="submit" id="submit_button">Search</button>
+                    </form>
+                </td>
+            </tr>
+        </table><!--menu_bar_elements-->
+    </td></tr><!--menu_bar-->
+    {% endblock %}
+
+    {% include ""|add:include_template %}
+
+    <tr><td class="foo">Raaky Designs</td></tr>
+</table>
+</body>
+</html>
+{% endautoescape %}

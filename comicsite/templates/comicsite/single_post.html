@@ -1,0 +1,49 @@
+{% load static %}
+{% autoescape off %}
+{% block content %}
+
+<tr id="main_content_update_handle"><td class="post_content">
+    <table>
+        <tr><td><!--title and subtitle-->
+            <a href="{% url 'permalink_post_by_id' post_id=post.pk %}"><h2>{{post.title}}</h2></a>
+            <h3><i>{{post.subtitle}}</i></h3>
+        </td></tr>
+    </table><!--title and subtitle-->
+
+    <table class="comic_image">
+    {% if post.image_path %}
+        <!--main image--><tr><td class="banner"><a href="{% url 'permalink_post_by_id' post_id=post.pk %}">
+            <img src="{% static 'img/comics/' %}{{post.image_path}}" title="{{post.hover_text}}"></img></a></td></tr><!--main image-->
+    {% endif %}
+        <tr><td class="prevnext_links">|<!--links-->
+            {%for name, adjacent_post_id in adjacent_post_ids%}
+            <a onclick="myOnclickEvent(this); return false;" href="{% url 'xml_post_by_id' post_id=adjacent_post_id %}">{{name}}</a> |</b> 
+            {% endfor %}
+        </td></tr><!--links-->
+    </table><!--comic_image-->
+        
+    <table><!--descript. and tags-->
+        <tr><td><p class="description">{{post.description}}</p>
+        <p><i> - {{post.author}}, {{post.published_date}}</i></p>
+        {% if post.social_uris %}
+            <p>View on: 
+                {% for name, uri in post.social_uris.items %}                
+                <b><a href="{{ uri }}">{{ name }}</a></b>, 
+                {% endfor %}</p>
+        {% endif %}
+        <p>Tagged: 
+            {%for display_tag, URL_tag in display_to_URL_tags.items%}
+            <b><a onclick="myOnclickEvent(this); return false;" href="{% url 'xml_posts_tagged' tag=URL_tag %}">{{display_tag}}</a></b>, 
+            {% endfor %}
+        </p>
+        <p>In category: 
+            {%for display_category, URL_category in display_to_URL_category.items%}
+            <b><a onclick="myOnclickEvent(this); return false;" href="{% url 'xml_posts_categorized' category=URL_category %}">{{display_category}}</a></b> 
+            {% endfor %}
+        </p>
+    </td></tr></table><!--descript. and tags-->
+</td></tr><!--post_content-->
+
+{% endblock %}
+{% endautoescape %}
+

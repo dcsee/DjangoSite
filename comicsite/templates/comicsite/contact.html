@@ -1,0 +1,61 @@
+{% load static %}
+{% autoescape off %}
+{% block content %}
+
+<script type="text/javascript">
+function myFormSubmitEvent(){
+    var contactUri = document.getElementById("contact_uri").href;
+    var el = document.getElementById("contact_response_update_handle");
+    var payload = {
+        name : document.getElementById("contact_name").value,
+        email : document.getElementById("contact_email").value,
+        message : document.getElementById("contact_message").value
+    };
+
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200) {
+            el.innerHTML = req.responseText;  
+//            el.innerHTML =JSON.stringify(payload); 
+        }
+    };
+
+    req.open('POST', contactUri);
+    req.setRequestHeader('Content-Type', 'application/json');
+
+//    el.innerHTML =JSON.stringify(payload);        
+    req.send(JSON.stringify(payload));
+//            el.innerHTML =JSON.stringify(payload); 
+//    req.send(JSON.stringify(payload)); 
+}
+</script>
+
+<tr id="main_content_update_handle"><td class="post_content">
+    <table>
+        <tr><td><!--title and subtitle-->
+            <p><a href="{% url 'contact' %}"><h2>Contact</h2></a>
+            <h3><i>Contact me</i></h3></p>
+        </td></tr>
+    </table><!--title and subtitle-->
+    <table class="comic_image">
+        <tr><td class="prevnext_links"></td></tr><!--links-->
+    </table><!--comic_image-->
+        
+    <table><!--descript. and tags-->
+        <tr><td id="contact_response_update_handle"></td></tr>
+        <tr><td><a href="{% url 'xml_contact_submit' %}" id="contact_uri" style="visibility:hidden"></a></td></tr>
+        <tr><td><p class="description">Let me know what you think!
+            Who are you? (name):<br>
+            <input id="contact_name" type="text" name="name"><br><br>
+            How can I get back to you? (email address):<br>
+            <input id="contact_email" type="text" name="email"><br><br>
+            What do you have to say?<br>
+            <textarea id="contact_message" rows="4" cols="80" name="message"></textarea><br>
+            <input type="submit" value="Send" onclick="myFormSubmitEvent(this); return false;">
+        </p>
+    </td></tr></table><!--descript. and tags-->
+</td></tr><!--post_content-->
+
+{% endblock %}
+{% endautoescape %}
+

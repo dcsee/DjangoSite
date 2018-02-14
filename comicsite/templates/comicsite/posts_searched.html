@@ -1,0 +1,26 @@
+{% load static %}
+{% autoescape off %}
+{% block content %}
+<tr><td class="post_content"><!--search results-->
+    <table>
+    {% if status_message %}
+        <p>{{status_message}}</p>
+    {% endif %}
+    {% for post in posts_found %}
+    <tr class="search_result">
+        {% if post.thumbnail_path %}
+        <td class="searched_thumbnail"><a href="{% url 'permalink_post_by_id' post_id=post.pk %}">
+        <img src="{% static 'img/thumbs/' %}{{post.thumbnail_path}}" title="{{post.hover_text}}"></img></a></td>
+        {% else %}
+        <td class="searched_thumbnail"><a href="{% url 'permalink_post_by_id' post_id=post.pk %}">
+        <img src="{% static 'img/thumbs/' %}default_thumbnail.jpg" title="{{post.hover_text}}"></img></a></td>
+        {% endif %}
+        <td class="searched_text">
+            <a href="{% url 'permalink_post_by_id' post_id=post.pk %}"><h2>{{post.title}}</h2></a>
+            <h3><i>{{post.subtitle}}</i></h3>
+        </td>
+    </tr><!-- search result -->
+    {% endfor %}
+    </table></td></tr><!--search results-->
+{% endblock %}
+{% endautoescape %}
